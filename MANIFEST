@@ -1,0 +1,13 @@
+Build.PL
+CHANGES
+CONTRIBUTING.md
+LICENSE
+MANIFEST
+META.yml
+Makefile.PL
+README
+README.mkdn
+lib/Import/Base.pm
+t/00_compile.t
+t/base.t
+t/lib/MyImporter.pm

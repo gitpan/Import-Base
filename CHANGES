@@ -1,0 +1,48 @@
+==================================================
+Changes from 2013-04-26 00:00:00 +0000 to present.
+==================================================
+
+------------------------------------------
+version 0.001 at 2014-04-26 22:40:11 +0000
+------------------------------------------
+
+  Change: 9e33f998098510a831407722f489d780a827334f
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-04-26 17:39:23 +0000
+
+    add links because it's nicer 
+
+  Change: 778308c8ae6289d11987410cc4c9bcef8be252b2
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-04-26 17:38:06 +0000
+
+    add build artifacts and base contributing file 
+
+  Change: 3e47d8dce6034ae58efecbbe95d589d2cf302dbb
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-04-26 17:34:14 +0000
+
+    add SEE ALSO section with some similar modules 
+
+  Change: dc30d7fe8d7ff16ee35821433d010dfffd1bc191
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-04-26 17:23:20 +0000
+
+    use an array to order imports instead of a hash
+
+    This allows us to do more complex imports, including allowing
+    multiple imports of the same module and allowing a '-MODULE' for 'no
+    MODULE' in the future. 
+
+  Change: 0fe51a7021314dd682b7e32e2469ecf9828c7458
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-04-26 17:11:38 +0000
+
+    initial Import::Base implementation
+
+    This culled from three projects where I've written the same import
+    method. We're going to start doing this the smart way now... 
+
+================
+End of releases.
+================
