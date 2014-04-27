@@ -4,7 +4,7 @@ Import::Base - Import a set of modules into the calling module
 
 # VERSION
 
-version 0.001
+version 0.002
 
 # SYNOPSIS
 

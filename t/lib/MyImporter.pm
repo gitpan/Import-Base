@@ -9,7 +9,6 @@ sub modules {
     strict => [],
     warnings => [],
     'Module::Runtime' => [qw( use_module )],
-    feature => [qw( :5.10 )],
 }
 
 1;

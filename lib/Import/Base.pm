@@ -1,6 +1,6 @@
 package Import::Base;
 {
-  $Import::Base::VERSION = '0.001';
+  $Import::Base::VERSION = '0.002';
 }
 # ABSTRACT: Import a set of modules into the calling module
 
@@ -36,7 +36,7 @@ Import::Base - Import a set of modules into the calling module
 
 =head1 VERSION
 
-version 0.001
+version 0.002
 
 =head1 SYNOPSIS
 
