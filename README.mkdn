@@ -4,7 +4,7 @@ Import::Base - Import a set of modules into the calling module
 
 # VERSION
 
-version 0.002
+version 0.003
 
 # SYNOPSIS
 
@@ -15,6 +15,8 @@ version 0.002
         return (
             strict => [],
             warnings => [],
+            'My::Exporter' => [ 'foo', 'bar', 'baz' ],
+            '-warnings' => [qw( experimental::signatures )],
         );
     }
     1;
@@ -22,12 +24,123 @@ version 0.002
     package My::Module;
     use My::Base;
 
+    package My::Other;
+    use My::Base -exclude => [ 'warnings', 'My::Exporter' => [ 'bar' ] ];
+
 # DESCRIPTION
 
 This module makes it easier to build and manage a base set of imports. Rather
 than importing a dozen modules in each of your project's modules, you simply
 import one module and get all the other modules you want. This reduces your
 module boilerplate from 12 lines to 1.
+
+# USAGE
+
+## Base Module
+
+Creating a base module means extending Import::Base and overriding sub modules().
+
+A common base module should probably include [strict](https://metacpan.org/pod/strict),
+[warnings](https://metacpan.org/pod/warnings), and a [feature](https://metacpan.org/pod/feature) set.
+
+    package My::Base;
+    use base 'Import::Base';
+
+    sub modules {
+        my ( $class, %args ) = @_;
+        return (
+            'strict',
+            'warnings',
+            feature => [qw( :5.14 )],
+        );
+    }
+
+Now we can consume our base module by doing:
+
+    package My::Module;
+    use My::Base;
+
+Which is equivalent to:
+
+    package My::Module;
+    use strict;
+    use warnings;
+    use feature qw( :5.14 );
+
+Now when we want to change our feature set, we only need to edit one file!
+
+## Extended Base Module
+
+We can further extend our base module to create more specialized modules for
+classes and testing.
+
+    package My::Class;
+    use base 'My::Base';
+
+    sub modules {
+        my ( $class, %args ) = @_;
+        return (
+            $class->SUPER::modules( %args ),
+            'Moo::Lax',
+            'Types::Standard' => [qw( :all )],
+        );
+    }
+
+    package My::Test;
+    use base 'My::Base';
+
+    sub modules {
+        my ( $class, %args ) = @_;
+        return (
+            $class->SUPER::modules( %args ),
+            'Test::More',
+            'Test::Deep',
+            'Test::Exception',
+            'Test::Differences',
+        );
+    }
+
+Now all our classes just need to `use My::Class` and all our test scripts just
+need to `use My::Test`.
+
+## Unimporting
+
+Sometimes instead of `use Module` we need to do `no Module`, to turn off
+`strict` or `warnings` categories for example.
+
+By prefixing the module name with a `-`, Import::Base will act like `no`
+instead of `use`.
+
+    package My::Base;
+    use base 'Import::Base';
+
+    sub modules {
+        my ( $class, %args ) = @_;
+        return (
+            'strict',
+            'warnings',
+            feature => [qw( :5.20 )],
+            '-warnings' => [qw( experimental::signatures )],
+        );
+    }
+
+Now the warnings for using the 5.20 subroutine signatures feature will be
+disabled.
+
+## -exclude
+
+When importing a base module, you can use `-exclude` to prevent certain things
+from being imported (if, for example, they would conflict with existing
+things).
+
+    # Prevent the "warnings" module from being imported
+    use My::Base -exclude => [ 'warnings' ];
+
+    # Prevent the "bar" sub from My::Exporter from being imported
+    use My::Base -exclude => [ 'My::Exporter' => [ 'bar' ] ];
+
+NOTE: If you find yourself using `-exclude` often, you would be better off
+removing the module or sub and only including it in those modules that need it.
 
 # METHODS
 
@@ -38,17 +151,17 @@ Returns a list of MODULE => \[ import() args \]. MODULE may appear multiple time
 
 # SEE ALSO
 
-- [ToolSet](http://search.cpan.org/perldoc?ToolSet)
+- [ToolSet](https://metacpan.org/pod/ToolSet)
 
     This is very similar, but does not appear to allow subclasses to remove imports from
     the list of things to be imported. By having the module list be a static array, we
     can modify it further in more levels of subclasses.
 
-- [Toolkit](http://search.cpan.org/perldoc?Toolkit)
+- [Toolkit](https://metacpan.org/pod/Toolkit)
 
     This one requires configuration files in a home directory, so is not shippable.
 
-- [rig](http://search.cpan.org/perldoc?rig)
+- [rig](https://metacpan.org/pod/rig)
 
     This one also requires configuration files in a home directory, so is not shippable.
 

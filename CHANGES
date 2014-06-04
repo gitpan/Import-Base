@@ -1,9 +1,44 @@
 ==================================================
-Changes from 2013-04-27 00:00:00 +0000 to present.
+Changes from 2013-06-04 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.002 at 2014-04-27 02:27:34 +0000
+version 0.003 at 2014-06-04 22:21:08 +0000
+------------------------------------------
+
+  Change: 4f8de2618919f408db08cff74c6eafebaa407d74
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-06-04 17:16:00 +0000
+
+    Release v0.003 
+
+  Change: ec47fcd27da02e502a34359c0da2117b49e8d282
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-06-04 17:15:39 +0000
+
+    implement unimport "-Module"
+
+    This allows us to diable warnings categories, most likely the
+    experimental warnings categories for experimental features.
+
+    Fixes #4 
+
+  Change: bace403a2cd7c66067cf526bf98c7d1ecda79bc1
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-06-04 16:55:48 +0000
+
+    add usage examples 
+
+  Change: ebe22994585fcac9aa76425572aab45f53abc845
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-06-04 16:55:28 +0000
+
+    add -exclude option when importing a base module
+
+    Fixes #1 
+
+------------------------------------------
+version 0.002 at 2014-04-27 02:27:17 +0000
 ------------------------------------------
 
   Change: 07eeabc2dcdb3146359d49a5261142b01656d6b4
