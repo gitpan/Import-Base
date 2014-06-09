@@ -1,9 +1,56 @@
 ==================================================
-Changes from 2013-06-04 00:00:00 +0000 to present.
+Changes from 2013-06-09 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.003 at 2014-06-04 22:21:08 +0000
+version 0.004 at 2014-06-09 04:42:19 +0000
+------------------------------------------
+
+  Change: 9ecc00d7bd57985e0115dedff7106a9891a61faf
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-06-08 23:42:09 +0000
+
+    release v0.004 
+
+  Change: 757c9520a3120e2cf59458bdde54a8b015633a78
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-06-08 23:41:47 +0000
+
+    fix prereqs
+
+    They're standard modules, but we should add them just in case 
+
+  Change: 52cba93dff4fa662ed5547882a686d0fad19192b
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-06-08 23:40:16 +0000
+
+    remove Test::Most since we only need Test::More 
+
+  Change: 6dfcad634a96fa4db02f5628ce91d9fb7ffd6b24
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-06-08 23:38:07 +0000
+
+    use numbered level when importing. thanks haarg!
+
+    This makes sure that other important things are set, like file and
+    line number.
+
+    Fixes #5 
+
+  Change: 43c5b944266295c88e068c192e5e39ac7daec932
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-06-08 23:37:02 +0000
+
+    add test for inheriting from a base module 
+
+  Change: e5367ade04dc1dacd0e4ca03f9881f29c4af1852
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-06-04 17:26:14 +0000
+
+    explain what modules() returns and remove empty [] 
+
+------------------------------------------
+version 0.003 at 2014-06-04 22:16:00 +0000
 ------------------------------------------
 
   Change: 4f8de2618919f408db08cff74c6eafebaa407d74

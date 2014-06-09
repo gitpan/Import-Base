@@ -2,7 +2,7 @@ NAME
     Import::Base - Import a set of modules into the calling module
 
 VERSION
-    version 0.003
+    version 0.004
 
 SYNOPSIS
         package My::Base;
@@ -10,13 +10,12 @@ SYNOPSIS
         sub modules {
             my ( $class, %args ) = @_;
             return (
-                strict => [],
-                warnings => [],
+                'strict',
+                'warnings',
                 'My::Exporter' => [ 'foo', 'bar', 'baz' ],
                 '-warnings' => [qw( experimental::signatures )],
             );
         }
-        1;
 
         package My::Module;
         use My::Base;
@@ -33,7 +32,9 @@ DESCRIPTION
 USAGE
   Base Module
     Creating a base module means extending Import::Base and overriding sub
-    modules().
+    modules(). modules() returns a list of modules to import, optionally
+    with a arrayref of arguments to be passed to the module's import()
+    method.
 
     A common base module should probably include strict, warnings, and a
     feature set.

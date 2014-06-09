@@ -24,15 +24,18 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "Import::Base",
   "PREREQ_PM" => {
-    "Import::Into" => 0,
-    "Module::Runtime" => 0
+    "Import::Into" => "1.002000",
+    "Module::Runtime" => 0,
+    "strict" => 0,
+    "warnings" => 0
   },
   "TEST_REQUIRES" => {
+    "Carp" => 0,
     "Test::Compile" => 0,
     "Test::Import" => 0,
-    "Test::Most" => 0
+    "Test::More" => 0
   },
-  "VERSION" => "0.003",
+  "VERSION" => "0.004",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -40,12 +43,15 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
-  "Import::Into" => 0,
+  "Carp" => 0,
+  "Import::Into" => "1.002000",
   "Module::Build" => "0.3601",
   "Module::Runtime" => 0,
   "Test::Compile" => 0,
   "Test::Import" => 0,
-  "Test::Most" => 0
+  "Test::More" => 0,
+  "strict" => 0,
+  "warnings" => 0
 );
 
 

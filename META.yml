@@ -3,10 +3,11 @@ abstract: 'Import a set of modules into the calling module'
 author:
   - 'Doug Bell <preaction@cpan.org>'
 build_requires:
+  Carp: '0'
   Module::Build: '0.3601'
   Test::Compile: '0'
   Test::Import: '0'
-  Test::Most: '0'
+  Test::More: '0'
 configure_requires:
   ExtUtils::MakeMaker: '6.30'
   Module::Build: '0.3601'
@@ -18,10 +19,12 @@ meta-spec:
   version: '1.4'
 name: Import-Base
 requires:
-  Import::Into: '0'
+  Import::Into: '1.002000'
   Module::Runtime: '0'
+  strict: '0'
+  warnings: '0'
 resources:
   bugtracker: https://github.com/preaction/Import-Base/issues
   homepage: https://github.com/preaction/Import-Base
   repository: https://github.com/preaction/Import-Base.git
-version: '0.003'
+version: '0.004'

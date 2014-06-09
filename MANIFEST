@@ -13,5 +13,6 @@ t/00_compile.t
 t/base.t
 t/exclude.t
 t/lib/MyImporter.pm
+t/lib/MyInherited.pm
 t/lib/MyUnstrict.pm
 t/no.t

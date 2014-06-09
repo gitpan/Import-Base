@@ -1,6 +1,6 @@
 package Import::Base;
 # ABSTRACT: Import a set of modules into the calling module
-$Import::Base::VERSION = '0.003';
+$Import::Base::VERSION = '0.004';
 use strict;
 use warnings;
 use Import::Into;
@@ -24,7 +24,6 @@ sub import {
         }
     }
 
-    my $caller = caller;
     my @modules = $class->modules( %args );
     while ( @modules ) {
         my $module = shift @modules;
@@ -50,7 +49,7 @@ sub import {
             $module =~ s/^-//;
         }
 
-        use_module( $module )->$method( $caller, @{ $imports } );
+        use_module( $module )->$method( 1, @{ $imports } );
     }
 }
 
@@ -66,7 +65,7 @@ Import::Base - Import a set of modules into the calling module
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -75,13 +74,12 @@ version 0.003
     sub modules {
         my ( $class, %args ) = @_;
         return (
-            strict => [],
-            warnings => [],
+            'strict',
+            'warnings',
             'My::Exporter' => [ 'foo', 'bar', 'baz' ],
             '-warnings' => [qw( experimental::signatures )],
         );
     }
-    1;
 
     package My::Module;
     use My::Base;
@@ -101,6 +99,8 @@ module boilerplate from 12 lines to 1.
 =head2 Base Module
 
 Creating a base module means extending Import::Base and overriding sub modules().
+modules() returns a list of modules to import, optionally with a arrayref of arguments
+to be passed to the module's import() method.
 
 A common base module should probably include L<strict|strict>,
 L<warnings|warnings>, and a L<feature|feature> set.
