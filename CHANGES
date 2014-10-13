@@ -1,9 +1,65 @@
 ==================================================
-Changes from 2013-06-09 00:00:00 +0000 to present.
+Changes from 2013-10-13 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.004 at 2014-06-09 04:42:19 +0000
+version 0.005 at 2014-10-13 06:07:00 +0000
+------------------------------------------
+
+  Change: 88a1838b34e070de22aabacec3e53b016326df3f
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-10-13 01:06:48 +0000
+
+    release v0.005 
+
+  Change: 64a635863eaa8e7b743d379c98690c191571f4b1
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-10-13 01:06:48 +0000
+
+    clarify docs on arguments and adding custom args 
+
+  Change: d87bd7d49b499fbcd6e32bbcca3e0bc620f45633
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-10-13 01:06:38 +0000
+
+    add import bundles to use fewer modules
+
+    Previously, the only way to have different sets of imports was to
+    have different packages. Unfortunately, due to how `use` works, this
+    also means different module files, creating a bunch of very small
+    modules.
+
+    With import bundles, multiple different sets of imports can be
+    defined in a single module, making for more flexibility.
+
+    use My::Test; # Implies My::Base and requires two modules
+
+    use My::Base 'Test'; # Single module!
+
+    Fixes #11 
+
+  Change: 0b2e91fbc1d20b17a5ca58e23ec5cb911041a6c3
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-07-05 22:52:53 +0000
+
+    SurgicalPodWeaver -> PodWeaver
+
+    SurgicalPodWeaver is broken, and all our files should be using
+    PodWeaver anyway. 
+
+  Change: a4a33108fb601df3212b31ac61e236f06353406b
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-06-14 16:08:30 +0000
+
+    add Import::Into to see also
+
+    Point people at the right place in case they want to build their own
+    base module.
+
+    Fixes #7 
+
+------------------------------------------
+version 0.004 at 2014-06-09 04:42:09 +0000
 ------------------------------------------
 
   Change: 9ecc00d7bd57985e0115dedff7106a9891a61faf

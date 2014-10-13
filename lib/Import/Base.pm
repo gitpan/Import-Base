@@ -1,17 +1,28 @@
 package Import::Base;
 # ABSTRACT: Import a set of modules into the calling module
-$Import::Base::VERSION = '0.004';
+$Import::Base::VERSION = '0.005';
 use strict;
 use warnings;
 use Import::Into;
 use Module::Runtime qw( use_module );
 
 sub modules {
-    return ();
+    my ( $class, $bundles, $args ) = @_;
+    my @modules = ();
+    my %bundles = ();
+    return
+        @modules,
+        map { @{ $bundles{ $_ } } } grep { exists $bundles{ $_ } } @$bundles;
 }
 
 sub import {
-    my ( $class, %args ) = @_;
+    my ( $class, @args ) = @_;
+    my @bundles;
+    while ( @args ) {
+        last if $args[0] =~ /^-/;
+        push @bundles, shift @args;
+    }
+    my %args = @args;
 
     die "Argument to -exclude must be arrayref"
         if $args{-exclude} && ref $args{-exclude} ne 'ARRAY';
@@ -24,7 +35,7 @@ sub import {
         }
     }
 
-    my @modules = $class->modules( %args );
+    my @modules = $class->modules( \@bundles, \%args );
     while ( @modules ) {
         my $module = shift @modules;
         my $imports = ref $modules[0] eq 'ARRAY' ? shift @modules : [];
@@ -65,26 +76,46 @@ Import::Base - Import a set of modules into the calling module
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SYNOPSIS
 
     package My::Base;
     use base 'Import::Base';
     sub modules {
-        my ( $class, %args ) = @_;
-        return (
+        my ( $class, $bundles, $args ) = @_;
+
+        # Modules that are always imported
+        my @modules = (
             'strict',
             'warnings',
             'My::Exporter' => [ 'foo', 'bar', 'baz' ],
-            '-warnings' => [qw( experimental::signatures )],
+            '-warnings' => [qw( uninitialized )],
         );
+
+        # Optional bundles
+        my %bundles = (
+            with_signatures => [
+                'feature' => [qw( signatures )],
+                '-warnings' => [qw( experimental::signatures )]
+            ],
+            Test => [qw( Test::More Test::Deep )],
+        );
+
+        # Return an array of imports/unimports
+        return $class->SUPER::modules( $bundles, $args ),
+            @modules,
+            map { @{ $bundles{ $_ } } } grep { exists $bundles{ $_ } } @$bundles;
     }
 
-    package My::Module;
+    # Use only the default set of modules
     use My::Base;
 
-    package My::Other;
+    # Use one of the optional packages
+    use My::Base 'with_signatures';
+    use My::Base 'Test';
+
+    # Exclude some things we don't want
     use My::Base -exclude => [ 'warnings', 'My::Exporter' => [ 'bar' ] ];
 
 =head1 DESCRIPTION
@@ -109,7 +140,7 @@ L<warnings|warnings>, and a L<feature|feature> set.
     use base 'Import::Base';
 
     sub modules {
-        my ( $class, %args ) = @_;
+        my ( $class, $bundles, $args ) = @_;
         return (
             'strict',
             'warnings',
@@ -131,6 +162,49 @@ Which is equivalent to:
 
 Now when we want to change our feature set, we only need to edit one file!
 
+=head2 Import Bundles
+
+In addition to a set of modules, we can also create optional bundles.
+
+    package My::Bundles;
+    use base 'My::Base';
+
+    sub modules {
+        my ( $class, $bundles, $args ) = @_;
+
+        # Modules that will always be included
+        my @modules = (
+            experimental => [qw( signatures )],
+        );
+
+        # Named bundles to include
+        my %bundles = (
+            Class => [qw( Moose MooseX::Types )],
+            Role => [qw( Moose::Role MooseX::Types )],
+            Test => [qw( Test::More Test::Deep )],
+        );
+
+        # Go to our parent class first
+        return $class->SUPER::modules( $bundles, $args ),
+            # Then the always included modules
+            @modules,
+            # Then the bundles we asked for
+            map { @{ $bundles{ $_ } } } grep { exists $bundles{ $_ } } @$bundles;
+    }
+
+Now we can choose one or more bundles to include:
+
+    # lib/MyClass.pm
+    use My::Base 'Class';
+
+    # t/mytest.t
+    use My::Base 'Test';
+
+    # t/lib/MyTest.pm
+    use My::Base 'Test', 'Class';
+
+Bundles must always come before options. Bundle names cannot start with "-".
+
 =head2 Extended Base Module
 
 We can further extend our base module to create more specialized modules for
@@ -140,9 +214,9 @@ classes and testing.
     use base 'My::Base';
 
     sub modules {
-        my ( $class, %args ) = @_;
+        my ( $class, $bundles, $args ) = @_;
         return (
-            $class->SUPER::modules( %args ),
+            $class->SUPER::modules( $bundles, $args ),
             'Moo::Lax',
             'Types::Standard' => [qw( :all )],
         );
@@ -152,9 +226,9 @@ classes and testing.
     use base 'My::Base';
 
     sub modules {
-        my ( $class, %args ) = @_;
+        my ( $class, $bundles, $args ) = @_;
         return (
-            $class->SUPER::modules( %args ),
+            $class->SUPER::modules( $bundles, $args ),
             'Test::More',
             'Test::Deep',
             'Test::Exception',
@@ -177,7 +251,7 @@ instead of C<use>.
     use base 'Import::Base';
 
     sub modules {
-        my ( $class, %args ) = @_;
+        my ( $class, $bundles, $args ) = @_;
         return (
             'strict',
             'warnings',
@@ -202,18 +276,32 @@ things).
     use My::Base -exclude => [ 'My::Exporter' => [ 'bar' ] ];
 
 NOTE: If you find yourself using C<-exclude> often, you would be better off
-removing the module or sub and only including it in those modules that need it.
+removing the module or sub and creating a bundle, or only including it in those
+modules that need it.
+
+=head2 Custom Arguments
+
+You can add any additional arguments to the C<use> line. The arguments list
+starts after the first key that starts with a '-'. To avoid conflicting with
+any future Import::Base feature, prefix all your custom arguments with '--'.
 
 =head1 METHODS
 
-=head2 modules( %args )
+=head2 modules( $bundles, $args )
 
-Prepare the list of modules to import. %args comes from the caller's C<use> line.
+Prepare the list of modules to import. $bundles is an array ref of bundles, if any.
+$args is a hash ref of generic arguments, if any.
+
 Returns a list of MODULE => [ import() args ]. MODULE may appear multiple times.
 
 =head1 SEE ALSO
 
 =over
+
+=item L<Import::Into|Import::Into>
+
+The module that provides the functionality to create this module. If Import::Base
+doesn't do what you want, look at Import::Into to build your own.
 
 =item L<ToolSet|ToolSet>
 

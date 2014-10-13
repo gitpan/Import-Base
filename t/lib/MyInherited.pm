@@ -6,9 +6,9 @@ use warnings;
 use base 'MyImporter';
 
 sub modules {
-    my ( $class, %args ) = @_;
+    my ( $class, $bundles, $args ) = @_;
     return (
-        $class->SUPER::modules,
+        $class->SUPER::modules( $bundles, $args ),
         'Carp' => [qw( carp )],
     );
 }

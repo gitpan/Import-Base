@@ -4,15 +4,15 @@ author:
   - 'Doug Bell <preaction@cpan.org>'
 build_requires:
   Carp: '0'
-  Module::Build: '0.3601'
+  Module::Build: '0.28'
   Test::Compile: '0'
   Test::Import: '0'
   Test::More: '0'
 configure_requires:
-  ExtUtils::MakeMaker: '6.30'
-  Module::Build: '0.3601'
+  ExtUtils::MakeMaker: '0'
+  Module::Build: '0.28'
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.141520'
+generated_by: 'Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.140640'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -27,4 +27,4 @@ resources:
   bugtracker: https://github.com/preaction/Import-Base/issues
   homepage: https://github.com/preaction/Import-Base
   repository: https://github.com/preaction/Import-Base.git
-version: '0.004'
+version: '0.005'
