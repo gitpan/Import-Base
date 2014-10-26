@@ -1,9 +1,93 @@
 ==================================================
-Changes from 2013-10-13 00:00:00 +0000 to present.
+Changes from 2013-10-26 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.005 at 2014-10-13 06:07:00 +0000
+version 0.006 at 2014-10-26 23:40:52 +0000
+------------------------------------------
+
+  Change: 71f52d6e08882a2ce250de637aab2a11ec73d7a2
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-10-26 18:40:36 +0000
+
+    release v0.006 
+
+  Change: b6a50d4564839c54f3a5418b3703c3a320546e4d
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-10-26 18:15:43 +0000
+
+    add perl5 to SEE ALSO
+
+    Fixes #8 
+
+  Change: 033fe8d5b23279ff5cd43a25214308958f16a70c
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-10-26 18:14:44 +0000
+
+    add a rationale for the dynamic API
+
+    Since we added the static API and blessed it as The Right Way To Do
+    Things, we lost one advantage we had over ToolKit. 
+
+  Change: 26774b5c479fe179bf04db18e2fc4194e6be7eb6
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-10-26 18:02:20 +0000
+
+    reorganize and consolidate tests
+
+    Now the tests combine more features into a single set of simpler,
+    faster tests.
+
+    This also removes the need for Test::Import.
+
+    Fixes #14 
+
+  Change: b7e2492c1539fb8ac3684ca3d396705c6101b6cc
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-10-26 17:20:33 +0000
+
+    add documentation boilerplate
+
+    Fixes #13 
+
+  Change: 806fc2edb2cb79c611ad3732b8722dec0e7a2057
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-10-26 17:13:26 +0000
+
+    don't build 5.8
+
+    5.8 temporarily not supported, because of the "mro" module prereq 
+
+  Change: 2f0b19d25c267863bf840e42b53fab2a837f3aaa
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-10-26 17:10:23 +0000
+
+    add static package var api
+
+    Now, instead of overriding modules(), users can create
+    @IMPORT_MODULES and %IMPORT_BUNDLES to provide the data Import::Base
+    needs.
+
+    This makes extending base modules a lot less error-prone, and opens
+    us up to doing more helpers around the static data, like a
+    Dist::Zilla plugin for gathering prereqs.
+
+    Fixes #12 
+
+  Change: 4beb91e7296434905b29a9d8174685be94f2323a
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-10-14 23:22:04 +0000
+
+    add minimum perl version 
+
+  Change: 3454fc535774ffe5a3849101509bf6cac866e7bd
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-10-13 01:35:43 +0000
+
+    add travis.yml 
+
+------------------------------------------
+version 0.005 at 2014-10-13 06:06:48 +0000
 ------------------------------------------
 
   Change: 88a1838b34e070de22aabacec3e53b016326df3f

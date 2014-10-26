@@ -11,11 +11,8 @@ README.mkdn
 lib/Import/Base.pm
 t/00_compile.t
 t/base.t
-t/bundle.t
 t/exclude.t
-t/lib/MyBundles.pm
-t/lib/MyImporter.pm
-t/lib/MyInherited.pm
-t/lib/MyInheritedBundles.pm
-t/lib/MyUnstrict.pm
-t/no.t
+t/lib/MyDynamic.pm
+t/lib/MyDynamicInherits.pm
+t/lib/MyStatic.pm
+t/lib/MyStaticInherits.pm

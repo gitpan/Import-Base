@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-
+use 5.010;
 
 use ExtUtils::MakeMaker ;
 
@@ -26,16 +26,16 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "Import::Into" => "1.002000",
     "Module::Runtime" => 0,
+    "mro" => 0,
     "strict" => 0,
     "warnings" => 0
   },
   "TEST_REQUIRES" => {
     "Carp" => 0,
     "Test::Compile" => 0,
-    "Test::Import" => 0,
     "Test::More" => 0
   },
-  "VERSION" => "0.005",
+  "VERSION" => "0.006",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -48,8 +48,8 @@ my %FallbackPrereqs = (
   "Module::Build" => "0.28",
   "Module::Runtime" => 0,
   "Test::Compile" => 0,
-  "Test::Import" => 0,
   "Test::More" => 0,
+  "mro" => 0,
   "strict" => 0,
   "warnings" => 0
 );

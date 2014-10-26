@@ -1,15 +1,23 @@
 package
-    MyInheritedBundles;
+    MyDynamicInherits;
 
 use strict;
 use warnings;
-use base 'MyBundles';
+use base 'MyDynamic';
 
 sub modules {
     my ( $class, $bundles, $args ) = @_;
-    my @modules = ();
+    my @modules = (
+        '-strict' => [qw( vars )],
+    );
     my %bundles = (
-        with_strict => [ 'warnings' ],
+        'Spec' => [
+            'File::Spec::Functions' => [qw( catfile )],
+        ],
+        Lax => [
+            '-strict',
+            '-warnings',
+        ],
     );
     return $class->SUPER::modules( $bundles, $args ),
         @modules,

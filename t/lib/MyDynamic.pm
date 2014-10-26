@@ -1,5 +1,5 @@
 package
-    MyBundles;
+    MyDynamic;
 
 use strict;
 use warnings;
@@ -7,10 +7,17 @@ use base 'Import::Base';
 
 sub modules {
     my ( $class, $bundles, $args ) = @_;
-    my @modules = ();
+    my @modules = (
+        "strict",
+        "warnings",
+    );
     my %bundles = (
-        with_strict => [ 'strict' ],
-        with_warnings => [ 'warnings' ],
+        'Spec' => [
+            'File::Spec::Functions' => [qw( catdir )],
+        ],
+        'lax' => [
+            '-warnings' => [qw( uninitialized )],
+        ],
     );
     return $class->SUPER::modules( $bundles, $args ),
         @modules,
