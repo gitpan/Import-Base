@@ -1,6 +1,6 @@
 package Import::Base;
 # ABSTRACT: Import a set of modules into the calling module
-$Import::Base::VERSION = '0.006';
+$Import::Base::VERSION = '0.007';
 use strict;
 use warnings;
 use mro ();
@@ -87,7 +87,7 @@ Import::Base - Import a set of modules into the calling module
 
 =head1 VERSION
 
-version 0.006
+version 0.007
 
 =head1 SYNOPSIS
 
@@ -221,6 +221,10 @@ classes and testing.
 
 Now all our classes just need to C<use My::Class> and all our test scripts just
 need to C<use My::Test>.
+
+B<NOTE:> Be careful when extending base modules from other projects! If the
+module you are extending changes, your modules may unexpectedly break. It is
+best to keep your base modules on a per-project scale.
 
 =head2 Unimporting
 
@@ -396,6 +400,29 @@ Here is an example for documenting your own base modules
     =item L<Import::Base>
 
     =back
+
+=head1 BEST PRACTICES
+
+=head2 One Per Project
+
+Every project of at least medium size should have its own base module.
+Consolidating a bunch of common base modules into a single distribution and
+releasing to CPAN may sound like a good idea, but it opens you up to
+difficult-to-diagnose problems.
+
+If many projects all depend on the same base, any change to the central base
+module could potentially break one of the consuming modules. In a single,
+well-tested project, it is easy to track down and address issues due to changes
+in the base module. If the base module is released to CPAN, breakage may not
+appear until someone tries to install a module that depends on your base.
+
+Version incompatibility, where project Foo depends on version 1 of the base,
+while project Bar depends on version 2, will create very frustrating situations
+for your users.
+
+Having to track down another project to figure out what modules are active in
+the current package is a lot of work, creating frustration for contributing
+authors.
 
 =head1 SEE ALSO
 

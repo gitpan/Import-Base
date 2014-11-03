@@ -28,4 +28,5 @@ resources:
   bugtracker: https://github.com/preaction/Import-Base/issues
   homepage: https://github.com/preaction/Import-Base
   repository: https://github.com/preaction/Import-Base.git
-version: '0.006'
+version: '0.007'
+x_authority: cpan:PREACTION

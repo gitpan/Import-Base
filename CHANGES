@@ -1,289 +1,52 @@
-==================================================
-Changes from 2013-10-26 00:00:00 +0000 to present.
-==================================================
+Changelog for Import-Base
+
+0.007 2014-11-03T00:24:51
+ - allow cpanfile to be built as part of the release
+ - add CHANGES and cpanfile for new dist.ini
+ - update dist.ini for new best practices
+ - make sure we only check for warnings from the eval
+ - ensure there are no warnings
+ - add best practices about backward compatibility
+
+0.006 2014-10-26T23:40:36
+ - release v0.006
+ - add perl5 to SEE ALSO
+ - add a rationale for the dynamic API
+ - reorganize and consolidate tests
+ - add documentation boilerplate
+ - don't build 5.8
+ - add static package var api
+ - add minimum perl version
+ - add travis.yml
+
+0.005 2014-10-13T06:06:48
+ - release v0.005
+ - clarify docs on arguments and adding custom args
+ - add import bundles to use fewer modules
+ - SurgicalPodWeaver -> PodWeaver
+ - add Import::Into to see also
+
+0.004 2014-06-09T04:42:09
+ - release v0.004
+ - fix prereqs
+ - remove Test::Most since we only need Test::More
+ - use numbered level when importing. thanks haarg!
+ - add test for inheriting from a base module
+ - explain what modules() returns and remove empty []
+
+0.003 2014-06-04T22:16:00
+ - implement unimport "-Module"
+ - add usage examples
+ - add -exclude option when importing a base module
+
+0.002 2014-04-27T02:27:17
+ - update to version 0.002
+ - remove feature from the test module
+
+0.001 2014-04-26T22:39:23
+ - add links because it's nicer
+ - add build artifacts and base contributing file
+ - add SEE ALSO section with some similar modules
+ - use an array to order imports instead of a hash
+ - initial Import::Base implementation
 
-------------------------------------------
-version 0.006 at 2014-10-26 23:40:52 +0000
-------------------------------------------
-
-  Change: 71f52d6e08882a2ce250de637aab2a11ec73d7a2
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-10-26 18:40:36 +0000
-
-    release v0.006 
-
-  Change: b6a50d4564839c54f3a5418b3703c3a320546e4d
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-10-26 18:15:43 +0000
-
-    add perl5 to SEE ALSO
-
-    Fixes #8 
-
-  Change: 033fe8d5b23279ff5cd43a25214308958f16a70c
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-10-26 18:14:44 +0000
-
-    add a rationale for the dynamic API
-
-    Since we added the static API and blessed it as The Right Way To Do
-    Things, we lost one advantage we had over ToolKit. 
-
-  Change: 26774b5c479fe179bf04db18e2fc4194e6be7eb6
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-10-26 18:02:20 +0000
-
-    reorganize and consolidate tests
-
-    Now the tests combine more features into a single set of simpler,
-    faster tests.
-
-    This also removes the need for Test::Import.
-
-    Fixes #14 
-
-  Change: b7e2492c1539fb8ac3684ca3d396705c6101b6cc
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-10-26 17:20:33 +0000
-
-    add documentation boilerplate
-
-    Fixes #13 
-
-  Change: 806fc2edb2cb79c611ad3732b8722dec0e7a2057
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-10-26 17:13:26 +0000
-
-    don't build 5.8
-
-    5.8 temporarily not supported, because of the "mro" module prereq 
-
-  Change: 2f0b19d25c267863bf840e42b53fab2a837f3aaa
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-10-26 17:10:23 +0000
-
-    add static package var api
-
-    Now, instead of overriding modules(), users can create
-    @IMPORT_MODULES and %IMPORT_BUNDLES to provide the data Import::Base
-    needs.
-
-    This makes extending base modules a lot less error-prone, and opens
-    us up to doing more helpers around the static data, like a
-    Dist::Zilla plugin for gathering prereqs.
-
-    Fixes #12 
-
-  Change: 4beb91e7296434905b29a9d8174685be94f2323a
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-10-14 23:22:04 +0000
-
-    add minimum perl version 
-
-  Change: 3454fc535774ffe5a3849101509bf6cac866e7bd
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-10-13 01:35:43 +0000
-
-    add travis.yml 
-
-------------------------------------------
-version 0.005 at 2014-10-13 06:06:48 +0000
-------------------------------------------
-
-  Change: 88a1838b34e070de22aabacec3e53b016326df3f
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-10-13 01:06:48 +0000
-
-    release v0.005 
-
-  Change: 64a635863eaa8e7b743d379c98690c191571f4b1
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-10-13 01:06:48 +0000
-
-    clarify docs on arguments and adding custom args 
-
-  Change: d87bd7d49b499fbcd6e32bbcca3e0bc620f45633
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-10-13 01:06:38 +0000
-
-    add import bundles to use fewer modules
-
-    Previously, the only way to have different sets of imports was to
-    have different packages. Unfortunately, due to how `use` works, this
-    also means different module files, creating a bunch of very small
-    modules.
-
-    With import bundles, multiple different sets of imports can be
-    defined in a single module, making for more flexibility.
-
-    use My::Test; # Implies My::Base and requires two modules
-
-    use My::Base 'Test'; # Single module!
-
-    Fixes #11 
-
-  Change: 0b2e91fbc1d20b17a5ca58e23ec5cb911041a6c3
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-07-05 22:52:53 +0000
-
-    SurgicalPodWeaver -> PodWeaver
-
-    SurgicalPodWeaver is broken, and all our files should be using
-    PodWeaver anyway. 
-
-  Change: a4a33108fb601df3212b31ac61e236f06353406b
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-06-14 16:08:30 +0000
-
-    add Import::Into to see also
-
-    Point people at the right place in case they want to build their own
-    base module.
-
-    Fixes #7 
-
-------------------------------------------
-version 0.004 at 2014-06-09 04:42:09 +0000
-------------------------------------------
-
-  Change: 9ecc00d7bd57985e0115dedff7106a9891a61faf
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-06-08 23:42:09 +0000
-
-    release v0.004 
-
-  Change: 757c9520a3120e2cf59458bdde54a8b015633a78
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-06-08 23:41:47 +0000
-
-    fix prereqs
-
-    They're standard modules, but we should add them just in case 
-
-  Change: 52cba93dff4fa662ed5547882a686d0fad19192b
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-06-08 23:40:16 +0000
-
-    remove Test::Most since we only need Test::More 
-
-  Change: 6dfcad634a96fa4db02f5628ce91d9fb7ffd6b24
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-06-08 23:38:07 +0000
-
-    use numbered level when importing. thanks haarg!
-
-    This makes sure that other important things are set, like file and
-    line number.
-
-    Fixes #5 
-
-  Change: 43c5b944266295c88e068c192e5e39ac7daec932
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-06-08 23:37:02 +0000
-
-    add test for inheriting from a base module 
-
-  Change: e5367ade04dc1dacd0e4ca03f9881f29c4af1852
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-06-04 17:26:14 +0000
-
-    explain what modules() returns and remove empty [] 
-
-------------------------------------------
-version 0.003 at 2014-06-04 22:16:00 +0000
-------------------------------------------
-
-  Change: 4f8de2618919f408db08cff74c6eafebaa407d74
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-06-04 17:16:00 +0000
-
-    Release v0.003 
-
-  Change: ec47fcd27da02e502a34359c0da2117b49e8d282
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-06-04 17:15:39 +0000
-
-    implement unimport "-Module"
-
-    This allows us to diable warnings categories, most likely the
-    experimental warnings categories for experimental features.
-
-    Fixes #4 
-
-  Change: bace403a2cd7c66067cf526bf98c7d1ecda79bc1
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-06-04 16:55:48 +0000
-
-    add usage examples 
-
-  Change: ebe22994585fcac9aa76425572aab45f53abc845
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-06-04 16:55:28 +0000
-
-    add -exclude option when importing a base module
-
-    Fixes #1 
-
-------------------------------------------
-version 0.002 at 2014-04-27 02:27:17 +0000
-------------------------------------------
-
-  Change: 07eeabc2dcdb3146359d49a5261142b01656d6b4
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-04-26 21:27:17 +0000
-
-    update to version 0.002 
-
-  Change: f32a70b7b93c57f94b83de8911f2840d5adbd142
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-04-26 21:26:34 +0000
-
-    remove feature from the test module
-
-    We aren't actually testing for it, since it requires some magic that
-    only exists in later versions of feature.pm 
-
-------------------------------------------
-version 0.001 at 2014-04-26 22:39:23 +0000
-------------------------------------------
-
-  Change: 9e33f998098510a831407722f489d780a827334f
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-04-26 17:39:23 +0000
-
-    add links because it's nicer 
-
-  Change: 778308c8ae6289d11987410cc4c9bcef8be252b2
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-04-26 17:38:06 +0000
-
-    add build artifacts and base contributing file 
-
-  Change: 3e47d8dce6034ae58efecbbe95d589d2cf302dbb
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-04-26 17:34:14 +0000
-
-    add SEE ALSO section with some similar modules 
-
-  Change: dc30d7fe8d7ff16ee35821433d010dfffd1bc191
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-04-26 17:23:20 +0000
-
-    use an array to order imports instead of a hash
-
-    This allows us to do more complex imports, including allowing
-    multiple imports of the same module and allowing a '-MODULE' for 'no
-    MODULE' in the future. 
-
-  Change: 0fe51a7021314dd682b7e32e2469ecf9828c7458
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2014-04-26 17:11:38 +0000
-
-    initial Import::Base implementation
-
-    This culled from three projects where I've written the same import
-    method. We're going to start doing this the smart way now... 
-
-================
-End of releases.
-================
