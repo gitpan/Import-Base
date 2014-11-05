@@ -4,7 +4,7 @@ Import::Base - Import a set of modules into the calling module
 
 # VERSION
 
-version 0.007
+version 0.008
 
 # STATUS
 
@@ -22,6 +22,11 @@ version 0.007
         'warnings',
         'My::Exporter' => [ 'foo', 'bar', 'baz' ],
         '-warnings' => [qw( uninitialized )],
+        # Callback to generate modules to import
+        sub {
+            my ( $bundles, $args ) = @_;
+            return "My::MoreModule" => [qw( fuzz )];
+        },
     );
 
     # Optional bundles
@@ -183,6 +188,51 @@ NOTE: If you find yourself using `-exclude` often, you would be better off
 removing the module or sub and creating a bundle, or only including it in those
 modules that need it.
 
+## Subref Callbacks
+
+To get a little bit of dynamic support in the otherwise static module lists, you may
+add sub references to generate modules or imports.
+
+    package My::Base;
+    use base 'Import::Base';
+    our @IMPORT_MODULES = (
+        sub {
+            my ( $bundles, $args ) = @_;
+            return qw( strict warnings );
+        },
+        feature => sub {
+            my ( $bundles, $args ) = @_;
+            return [qw( :5.20 )];
+        },
+    );
+
+    # strict, warnings, and 5.20 features will be imported
+
+Plain strings are module names. Array references are arguments to import.
+
+## Subref Arguments
+
+Sub references get an arrayref of bundles being requested, and a hashref of
+extra arguments. Arguments from the calling side start with a '-'. Arguments
+from Import::Base do not. Possible arguments are:
+
+    package         - The package we are exporting to
+    -exclude        - The exclusions, see L</"-exclude">.
+
+Using `package`, a subref could check or alter `@ISA`, work with the object's
+metaclass (if you're using one), or export additional symbols not set up for
+export.
+
+## Custom Arguments
+
+When using ["Subref Callbacks"](#subref-callbacks), you can add additional arguments to the
+`use` line. The arguments list starts after the first key that starts with a
+'-'. To avoid conflicting with any future Import::Base feature, prefix all your
+custom arguments with '--'.
+
+    use My::Base -exclude => [qw( strict )], --custom => "arguments";
+    # Subrefs will get $args{--custom} set to "arguments"
+
 ## Dynamic API
 
 Instead of providing `@IMPORT_MODULES` and `%IMPORT_BUNDLES`, you can override the
@@ -218,13 +268,6 @@ to have custom arguments (below).
     }
 
 Using the above boilerplate will ensure that you start with all the basic functionality.
-
-## Custom Arguments
-
-If you are using the ["Dynamic API"](#dynamic-api), you can add any additional arguments to
-the `use` line. The arguments list starts after the first key that starts with
-a '-'. To avoid conflicting with any future Import::Base feature, prefix all
-your custom arguments with '--'.
 
 # METHODS
 

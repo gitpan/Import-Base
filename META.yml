@@ -11,7 +11,7 @@ configure_requires:
   ExtUtils::MakeMaker: '0'
   Module::Build: '0.28'
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.140640'
+generated_by: 'Dist::Zilla version 5.023, CPAN::Meta::Converter version 2.142690'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -28,5 +28,5 @@ resources:
   bugtracker: https://github.com/preaction/Import-Base/issues
   homepage: https://github.com/preaction/Import-Base
   repository: https://github.com/preaction/Import-Base.git
-version: '0.007'
+version: '0.008'
 x_authority: cpan:PREACTION

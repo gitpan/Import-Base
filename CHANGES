@@ -1,6 +1,13 @@
 Changelog for Import-Base
 
-0.007 2014-11-03T00:24:51
+0.008 2014-11-05T04:35:30
+ - add example of custom arguments
+ - add package arg to subref callbacks
+ - add docs about subref arguments
+ - add subrefs for dynamic bits in the static API
+
+0.007 2014-11-03T00:24:59
+ - release v0.007
  - allow cpanfile to be built as part of the release
  - add CHANGES and cpanfile for new dist.ini
  - update dist.ini for new best practices

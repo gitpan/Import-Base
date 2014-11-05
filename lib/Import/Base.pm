@@ -1,6 +1,6 @@
 package Import::Base;
 # ABSTRACT: Import a set of modules into the calling module
-$Import::Base::VERSION = '0.007';
+$Import::Base::VERSION = '0.008';
 use strict;
 use warnings;
 use mro ();
@@ -46,9 +46,22 @@ sub import {
         }
     }
 
-    my @modules = $class->modules( \@bundles, \%args );
+    # Add internal Import::Base args
+    $args{package} = scalar caller(0);
+
+    my @cb_args = ( \@bundles, \%args );
+    my @modules = $class->modules( @cb_args );
     while ( @modules ) {
+        if ( ref $modules[0] eq 'CODE' ) {
+            unshift @modules, shift( @modules )->( @cb_args );
+            next;
+        }
+
         my $module = shift @modules;
+        if ( ref $modules[0] eq 'CODE' ) {
+            unshift @modules, shift( @modules )->( @cb_args );
+        }
+
         my $imports = ref $modules[0] eq 'ARRAY' ? shift @modules : [];
 
         if ( exists $exclude->{ $module } ) {
@@ -87,7 +100,7 @@ Import::Base - Import a set of modules into the calling module
 
 =head1 VERSION
 
-version 0.007
+version 0.008
 
 =head1 SYNOPSIS
 
@@ -101,6 +114,11 @@ version 0.007
         'warnings',
         'My::Exporter' => [ 'foo', 'bar', 'baz' ],
         '-warnings' => [qw( uninitialized )],
+        # Callback to generate modules to import
+        sub {
+            my ( $bundles, $args ) = @_;
+            return "My::MoreModule" => [qw( fuzz )];
+        },
     );
 
     # Optional bundles
@@ -262,6 +280,51 @@ NOTE: If you find yourself using C<-exclude> often, you would be better off
 removing the module or sub and creating a bundle, or only including it in those
 modules that need it.
 
+=head2 Subref Callbacks
+
+To get a little bit of dynamic support in the otherwise static module lists, you may
+add sub references to generate modules or imports.
+
+    package My::Base;
+    use base 'Import::Base';
+    our @IMPORT_MODULES = (
+        sub {
+            my ( $bundles, $args ) = @_;
+            return qw( strict warnings );
+        },
+        feature => sub {
+            my ( $bundles, $args ) = @_;
+            return [qw( :5.20 )];
+        },
+    );
+
+    # strict, warnings, and 5.20 features will be imported
+
+Plain strings are module names. Array references are arguments to import.
+
+=head2 Subref Arguments
+
+Sub references get an arrayref of bundles being requested, and a hashref of
+extra arguments. Arguments from the calling side start with a '-'. Arguments
+from Import::Base do not. Possible arguments are:
+
+    package         - The package we are exporting to
+    -exclude        - The exclusions, see L</"-exclude">.
+
+Using C<package>, a subref could check or alter C<@ISA>, work with the object's
+metaclass (if you're using one), or export additional symbols not set up for
+export.
+
+=head2 Custom Arguments
+
+When using L</"Subref Callbacks">, you can add additional arguments to the
+C<use> line. The arguments list starts after the first key that starts with a
+'-'. To avoid conflicting with any future Import::Base feature, prefix all your
+custom arguments with '--'.
+
+    use My::Base -exclude => [qw( strict )], --custom => "arguments";
+    # Subrefs will get $args{--custom} set to "arguments"
+
 =head2 Dynamic API
 
 Instead of providing C<@IMPORT_MODULES> and C<%IMPORT_BUNDLES>, you can override the
@@ -297,13 +360,6 @@ to have custom arguments (below).
     }
 
 Using the above boilerplate will ensure that you start with all the basic functionality.
-
-=head2 Custom Arguments
-
-If you are using the L</Dynamic API>, you can add any additional arguments to
-the C<use> line. The arguments list starts after the first key that starts with
-a '-'. To avoid conflicting with any future Import::Base feature, prefix all
-your custom arguments with '--'.
 
 =head1 METHODS
 
