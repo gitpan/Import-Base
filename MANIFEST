@@ -15,8 +15,11 @@ t/base.t
 t/exclude.t
 t/lib/MyDynamic.pm
 t/lib/MyDynamicInherits.pm
+t/lib/MyDynamicOrdered.pm
 t/lib/MyDynamicSubrefs.pm
 t/lib/MyStatic.pm
 t/lib/MyStaticInherits.pm
+t/lib/MyStaticOrdered.pm
 t/lib/MyStaticSubrefs.pm
+t/order.t
 t/subrefs.t

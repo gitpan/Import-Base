@@ -1,6 +1,11 @@
 Changelog for Import-Base
 
-0.008 2014-11-05T04:35:30
+0.009 2014-11-06T06:03:19
+ - add some explanatory comments to SYNOPSIS
+ - add < and > order control prefixes
+
+0.008 2014-11-05T04:35:38
+ - release v0.008
  - add example of custom arguments
  - add package arg to subref callbacks
  - add docs about subref arguments

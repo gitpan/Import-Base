@@ -1,6 +1,6 @@
 package Import::Base;
 # ABSTRACT: Import a set of modules into the calling module
-$Import::Base::VERSION = '0.008';
+$Import::Base::VERSION = '0.009';
 use strict;
 use warnings;
 use mro ();
@@ -49,6 +49,8 @@ sub import {
     # Add internal Import::Base args
     $args{package} = scalar caller(0);
 
+    # Prepare the modules to load
+    my ( @first_load, @last_load );
     my @cb_args = ( \@bundles, \%args );
     my @modules = $class->modules( @cb_args );
     while ( @modules ) {
@@ -78,6 +80,23 @@ sub import {
             }
         }
 
+        # Determine the module order
+        if ( $module =~ /^</ ) {
+            $module =~ s/^<//;
+            unshift @first_load, [ $module => $imports ];
+        }
+        elsif ( $module =~ /^>/ ) {
+            $module =~ s/^>//;
+            push @last_load, [ $module => $imports ];
+        }
+        else {
+            push @first_load, [ $module => $imports ];
+        }
+    }
+
+    for my $pair ( @first_load, @last_load ) {
+        my ( $module, $imports ) = @{ $pair };
+
         my $method = 'import::into';
         if ( $module =~ /^-/ ) {
             $method = 'unimport::out_of';
@@ -100,7 +119,7 @@ Import::Base - Import a set of modules into the calling module
 
 =head1 VERSION
 
-version 0.008
+version 0.009
 
 =head1 SYNOPSIS
 
@@ -112,7 +131,9 @@ version 0.008
     our @IMPORT_MODULES = (
         'strict',
         'warnings',
+        # Import only these subs
         'My::Exporter' => [ 'foo', 'bar', 'baz' ],
+        # Disable uninitialized warnings
         '-warnings' => [qw( uninitialized )],
         # Callback to generate modules to import
         sub {
@@ -125,9 +146,14 @@ version 0.008
     our %IMPORT_BUNDLES = (
         with_signatures => [
             'feature' => [qw( signatures )],
-            '-warnings' => [qw( experimental::signatures )]
+            # Put this last to make sure nobody else can re-enable this warning
+            '>-warnings' => [qw( experimental::signatures )]
         ],
         Test => [qw( Test::More Test::Deep )],
+        Class => [
+            # Put this first so we can override what it enables later
+            '<Moo',
+        ],
     );
 
     ### Consumer classes
@@ -137,6 +163,7 @@ version 0.008
     # Use one of the optional packages
     use My::Base 'with_signatures';
     use My::Base 'Test';
+    use My::Base 'Class';
 
     # Exclude some things we don't want
     use My::Base -exclude => [ 'warnings', 'My::Exporter' => [ 'bar' ] ];
@@ -279,6 +306,56 @@ things).
 NOTE: If you find yourself using C<-exclude> often, you would be better off
 removing the module or sub and creating a bundle, or only including it in those
 modules that need it.
+
+=head2 Control Ordering
+
+The order you import modules can be important!
+
+    use warnings;
+    no warnings 'uninitialized';
+    # Uninitialized warnings are disabled
+
+    no warnings 'uninitialized';
+    use warnings;
+    # Uninitialized warnings are enabled!
+
+Due to modules enforcing their own strict and warnings, like L<Moose> and
+L<Moo>, you may not even know it's happening. This can make it hard to disable the
+experimental warnings:
+
+    use feature qw( postderef );
+    no warnings 'experimental::postderef';
+    use Moo;
+    # The postderef warnings are back on!
+
+To force a module to the front or the back of the list of imports, you can prefix
+the module name with C<E<lt>> or C<E<gt>>.
+
+    package My::Base;
+    use base 'Import::Base';
+    our @IMPORT_MODULES = (
+        feature => [qw( postderef )],
+        # Disable this warning last!
+        '>-warnings' => [qw( experimental::postderef )],
+    );
+
+    our %IMPORT_BUNDLES = (
+        Class => [
+            # Import this module first!
+            '<Moo',
+        ],
+    );
+
+    package main;
+    use My::Base 'Class';
+    my @foo = [ 1, 2, 3 ]->@*; # postderef!
+
+In this case, either putting Moo first or putting C<no warnings
+'experimental::postderef'> last would solve the problem.
+
+B<NOTE:> C<E<lt>> and C<E<gt>> come before C<->.
+
+If you need even more control over the order, consider the L</"Dynamic API">.
 
 =head2 Subref Callbacks
 
