@@ -1,6 +1,6 @@
 package Import::Base;
 # ABSTRACT: Import a set of modules into the calling module
-$Import::Base::VERSION = '0.009';
+$Import::Base::VERSION = '0.010';
 use strict;
 use warnings;
 use mro ();
@@ -16,6 +16,7 @@ sub modules {
     # less-specific ones
     for my $pkg ( reverse @{ mro::get_linear_isa( $class ) } ) {
         no strict 'refs';
+        no warnings 'once';
         push @modules, @{ $pkg . "::IMPORT_MODULES" };
         my %bundles = %{ $pkg . "::IMPORT_BUNDLES" };
         push @modules, map { @{ $bundles{ $_ } } }
@@ -119,7 +120,7 @@ Import::Base - Import a set of modules into the calling module
 
 =head1 VERSION
 
-version 0.009
+version 0.010
 
 =head1 SYNOPSIS
 
@@ -407,9 +408,6 @@ custom arguments with '--'.
 Instead of providing C<@IMPORT_MODULES> and C<%IMPORT_BUNDLES>, you can override the
 C<modules()> method to do anything you want.
 
-One advantage the dynamic API has is the ability to remove modules from superclasses, or
-to have custom arguments (below).
-
     package My::Bundles;
     use base 'My::Base';
 
@@ -437,6 +435,9 @@ to have custom arguments (below).
     }
 
 Using the above boilerplate will ensure that you start with all the basic functionality.
+
+One advantage the dynamic API has is the ability to remove modules from superclasses, or
+completely control the order that modules are imported, even from superclasses.
 
 =head1 METHODS
 

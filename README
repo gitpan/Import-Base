@@ -2,7 +2,7 @@ NAME
     Import::Base - Import a set of modules into the calling module
 
 VERSION
-    version 0.009
+    version 0.010
 
 SYNOPSIS
         ### Static API
@@ -281,9 +281,6 @@ USAGE
     Instead of providing @IMPORT_MODULES and %IMPORT_BUNDLES, you can
     override the "modules()" method to do anything you want.
 
-    One advantage the dynamic API has is the ability to remove modules from
-    superclasses, or to have custom arguments (below).
-
         package My::Bundles;
         use base 'My::Base';
 
@@ -312,6 +309,10 @@ USAGE
 
     Using the above boilerplate will ensure that you start with all the
     basic functionality.
+
+    One advantage the dynamic API has is the ability to remove modules from
+    superclasses, or completely control the order that modules are imported,
+    even from superclasses.
 
 METHODS
   modules( $bundles, $args )

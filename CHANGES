@@ -1,6 +1,13 @@
 Changelog for Import-Base
 
-0.009 2014-11-06T06:03:19
+0.010 2014-12-24T05:59:24
+ - add dzil tag annotation with name, date, and changelog
+ - fix warnings if a class doesn't have IMPORT_*
+ - remove note about custom args from dynamic api
+ - update weaver.ini from new skeleton
+
+0.009 2014-11-06T06:03:29
+ - release v0.009
  - add some explanatory comments to SYNOPSIS
  - add < and > order control prefixes
 

@@ -19,7 +19,7 @@ my %module_build_args = (
     "Doug Bell <preaction\@cpan.org>"
   ],
   "dist_name" => "Import-Base",
-  "dist_version" => "0.009",
+  "dist_version" => "0.010",
   "license" => "perl",
   "module_name" => "Import::Base",
   "recommends" => {},
